@@ -112,7 +112,7 @@ def calibration():
 
             world_space.append(world_point)
 
-            corners = cv.cornerSubPix(blob_img_gray, corners, (4, 5), (-1, -1), criteria = (cv.TERM_CRITERIA_EPS + cv.TERM_CRITERIA_MAX_ITER, 30, 0.001))
+            corners = cv.cornerSubPix(blob_img_gray, corners, (5, 5), (-1, -1), criteria = (cv.TERM_CRITERIA_EPS + cv.TERM_CRITERIA_MAX_ITER, 30, 0.001))
 
             image_space.append(corners)
 

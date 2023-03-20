@@ -4,8 +4,11 @@ import rospy
 import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
+from std_msgs.msg import String
 
 rospy.init_node("calibration_node")
+
+intrinsic_pub = rospy.Publisher("/car_1/camera/intrinsic", String, queue_size = 2)
 
 #num_of_images = rospy.get_param("calib_image_num")
 num_of_images = 100
@@ -45,7 +48,7 @@ for i in range(len(world_point)):
 
 def calibration():
     
-    global num_of_images, dist, world_point
+    global num_of_images, dist, world_point, intrinsic_pub
 
     count = 0
 
@@ -97,16 +100,16 @@ def calibration():
 
         ret, corners = cv.findCirclesGrid(blob_img_gray, (4, 11), None, flags = (cv.CALIB_CB_ASYMMETRIC_GRID + cv.CALIB_CB_CLUSTERING))
 
-        print(ret)
+        # print(ret)
 
-        if ret == False:
-            print("Image is", rand_num)
+        # if ret == False:
+        #     print("Image is", rand_num)
 
-            plt.imshow(blob_img)
-            plt.show()
-            continue
+        #     plt.imshow(blob_img)
+        #     plt.show()
+        #     continue
 
-        print("How many corners", len(corners))
+        # print("How many corners", len(corners))
 
         if ret == True:
 
@@ -118,17 +121,21 @@ def calibration():
 
         count += 1
 
-    print("Calibrating...")
+    #print("Calibrating...")
     ret, matrix, distortion, rotation, translation = cv.calibrateCamera(world_space, image_space, img.shape[: : -1], None, None)
 
     #print("RET", ret)
     #print("Rotation", rotation)
     #print("Translation", translation)
-    print("MTX", matrix)
+    #print("MTX", matrix)
     #print("Distortion", distortion)
+
+    intrinsic_pub.publish(str(matrix))
+
+
 
 
 if __name__ == '__main__':
     
     calibration()
-    #rospy.spin()
+    rospy.spin()

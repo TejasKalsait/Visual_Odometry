@@ -10,8 +10,8 @@ rospy.init_node("calibration_node")
 
 intrinsic_pub = rospy.Publisher("/car_1/camera/intrinsic", String, queue_size = 2)
 
-#num_of_images = rospy.get_param("calib_image_num")
-num_of_images = 100
+
+num_of_images = rospy.get_param("calib_image_num")
 
 # Distance between neighbouring blobs
 dist = 100
@@ -58,11 +58,11 @@ def calibration():
         #print("Random number is", rand_num)
 
         if rand_num < 10 and rand_num >= 0:
-            img_read = "../calib/frame00000" + str(rand_num) + ".png"
+            img_read = "/home/cse4568/catkin_ws/src/lab4/calib/frame00000" + str(rand_num) + ".png"
         elif rand_num < 100 and rand_num > 9:
-            img_read = "../calib/frame0000" + str(rand_num) + ".png"
+            img_read = "/home/cse4568/catkin_ws/src/lab4/calib/frame0000" + str(rand_num) + ".png"
         else:
-            img_read = "../calib/frame000" + str(rand_num) + ".png"
+            img_read = "/home/cse4568/catkin_ws/src/lab4/calib/frame000" + str(rand_num) + ".png"
 
         #print(img_read)
 
@@ -130,7 +130,9 @@ def calibration():
     #print("MTX", matrix)
     #print("Distortion", distortion)
 
-    intrinsic_pub.publish(str(matrix))
+    result = str(np.array(matrix).reshape(1, -1)[0])
+    print(result)
+    intrinsic_pub.publish(result)
 
 
 

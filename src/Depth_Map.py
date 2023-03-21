@@ -1,0 +1,92 @@
+#! /usr/bin/env python3
+
+import rospy
+import numpy as np
+import cv2 as cv
+from sensor_msgs.msg import CompressedImage, Image
+import message_filters
+from cv_bridge import CvBridge
+import matplotlib.pyplot as plt
+from std_msgs.msg import String
+
+baseline = 0.07
+focal_length = None
+# focal_length = 476.5
+
+def depth_callback(left_msg, right_msg):
+
+    global baseline, focal_length
+
+    print("Callback started")
+
+    bridge = CvBridge()
+    #dtype1, channels1 = bridge.encoding_as_cvtype2("bgr8")
+    depth_pub = rospy.Publisher("/car_1/camera/depth", Image, queue_size = 10)
+
+    # Converting compressed images to decompressed cv2 Gray Images
+
+    temp_arr = np.fromstring(left_msg.data, np.uint8)
+    left_img = cv.imdecode(temp_arr, flags = (cv.IMREAD_COLOR))
+    left_img = cv.cvtColor(left_img, cv.COLOR_BGR2GRAY)
+
+    # plt.imshow(left_img, cmap = "gray")
+    # print("Showing the left image now")
+    # plt.show()
+
+
+    temp_arr = np.fromstring(right_msg.data, np.uint8)
+    right_img = cv.imdecode(temp_arr, flags = (cv.IMREAD_COLOR))
+    right_img = cv.cvtColor(right_img, cv.COLOR_BGR2GRAY)
+
+
+    # plt.imshow(right_img)
+    # plt.imshow("Showing the right image now")
+    # plt.show()
+
+
+    # Starting the Depth Estimation Logic
+
+    stereo = cv.StereoBM_create(numDisparities = 32, blockSize = 31)
+    disparity = stereo.compute(left_img, right_img)
+    #print("Disparty is", disparity)
+
+    depth = (focal_length * baseline) / disparity
+
+    # plt.imshow(depth, cmap = "gray")
+    # print("Displaying he depth image now")
+    # plt.show()
+
+    depth_pub.publish(bridge.cv2_to_imgmsg(depth, encoding = "passthrough"))
+
+
+def focal_callback(focal_msg):
+
+    global focal_length
+
+    stripped = str(focal_msg.data).strip(" []")
+    focal_length = float(stripped[0:12])
+    rospy.loginfo(focal_length)
+
+    print("Focal length is", focal_length)
+
+
+if __name__ == "__main__":
+
+    rospy.init_node("Depth_Map_Node", anonymous = True)
+
+    rate = rospy.Rate(12)
+
+    focal = rospy.Subscriber("/car_1/camera/intrinsic", String, focal_callback, queue_size = 2)
+
+    rospy.sleep(2.0)
+    
+    left_sub = message_filters.Subscriber("/car_1/camera/left/image_raw/compressed", CompressedImage)
+    right_sub = message_filters.Subscriber("/car_1/camera/right/image_raw/compressed", CompressedImage)
+
+    ts = message_filters.TimeSynchronizer([left_sub, right_sub], queue_size = 10)
+    print("TimeSync Done, Registerning callback")
+
+    ts.registerCallback(depth_callback)
+
+    while not rospy.is_shutdown():
+        rate.sleep()

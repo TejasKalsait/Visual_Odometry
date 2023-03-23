@@ -5,10 +5,13 @@
     <param name="calib_image_num" value="$(arg calib_image_num)" type="double"/> 
 
     <!-- start the calibration node -->
-    <node pkg="lab4" type="lab4_calibration.py" name="calibration_node" output="screen"/>
+    <node pkg="lab4" type="lab4_calibration.py" name="calibration_node"/>
 
 
     <!-- start the calibraDepth node -->
-    <node pkg="lab4" type="Depth_Map.py" name="Depth_Map_Node" output="screen"/>
+    <node pkg="lab4" type="Depth_Map.py" name="Depth_Map_Node"/>
+
+    <!-- start the RVIZ -->
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find lab4)/rviz/lab4_svo.rviz"/>
     
 </launch>

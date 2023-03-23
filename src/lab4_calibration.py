@@ -11,7 +11,8 @@ rospy.init_node("calibration_node")
 intrinsic_pub = rospy.Publisher("/car_1/camera/intrinsic", String, queue_size = 2)
 
 
-num_of_images = rospy.get_param("calib_image_num")
+# num_of_images = rospy.get_param("calib_image_num")
+num_of_images = 20
 
 # Distance between neighbouring blobs
 dist = 100
@@ -130,8 +131,9 @@ def calibration():
     #print("MTX", matrix)
     #print("Distortion", distortion)
 
-    result = str(np.array(matrix).reshape(1, -1)[0])
-    print(result)
+    result = np.array(matrix).reshape(1, -1)[0]
+    result = str(result.tolist())
+    print("Result from calibration script", result)
     intrinsic_pub.publish(result)
 
 

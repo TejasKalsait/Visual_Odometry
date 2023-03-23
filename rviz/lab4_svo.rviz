@@ -5,6 +5,8 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
+        - /Odometry1
+        - /Odometry1/Status1
       Splitter Ratio: 0.5
     Tree Height: 539
   - Class: rviz/Selection
@@ -123,7 +125,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/ThirdPersonFollower
-      Distance: 16.872995376586914
+      Distance: 17.849679946899414
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -131,17 +133,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 8.845699310302734
-        Y: 0.3080120086669922
+        X: 0.11620879173278809
+        Y: -3.4162583351135254
         Z: 6.67572021484375e-06
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.170398235321045
+      Pitch: 1.380398154258728
       Target Frame: car_1_base_link
-      Yaw: 4.690403938293457
+      Yaw: 4.735408306121826
     Saved: ~
 Window Geometry:
   Displays:

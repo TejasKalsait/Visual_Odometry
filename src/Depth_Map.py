@@ -71,7 +71,7 @@ def depth_callback(left_msg, right_msg):
 
     depth = (focal_length * baseline) / disparity
 
-    plt.imshow(disparity, cmap = 'gray')
+    plt.imshow(depth, cmap = 'gray')
     print("Displaying he depth image now")
     plt.show()
 

@@ -82,15 +82,15 @@ def visualodometry_callback(left_msg, right_msg):
     stereo = cv.StereoBM_create()
 
     # Parameters to change
-    stereo.setNumDisparities(64)
+    stereo.setNumDisparities(32)
     stereo.setBlockSize(31)
     # stereo.setTextureThreshold(10)
     # stereo.setUniquenessRatio(15)
-    # stereo.setDisp12MaxDiff(-1)
+    stereo.setDisp12MaxDiff(-1)
     # stereo.setPreFilterType(1)
     # stereo.setPreFilterSize(5)
     # stereo.setPreFilterCap(21)
-    # stereo.setMinDisparity(0)
+    stereo.setMinDisparity(0)
     # stereo.setSpeckleRange(32)
     # stereo.setSpeckleWindowSize(21)
 
@@ -153,6 +153,8 @@ def visualodometry_callback(left_msg, right_msg):
     print("ThreeDPoses", three_d_poses)
     print("3D Poses Shape", three_d_poses.shape)
 
+    first_img_left = second_img_left
+    first_img_right = second_image_right
 
 def focal_callback(focal_msg):
 
@@ -184,7 +186,7 @@ if __name__ == "__main__":
 
     rospy.init_node("Visual_Odometry_Node")
 
-    rate = rospy.Rate(20)
+    rate = rospy.Rate(5)
 
     # focal = rospy.Subscriber("/car_1/camera/intrinsic", String, focal_callback, queue_size = 2)
     # depth = rospy.Subscriber("/car_1/camera/depth", Image, depth_callback, queue_size = 1)

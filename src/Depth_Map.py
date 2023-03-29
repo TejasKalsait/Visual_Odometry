@@ -50,8 +50,8 @@ def depth_callback(left_msg, right_msg):
 
     stereo = cv.StereoBM_create()
     
-    stereo.setNumDisparities(64)
-    stereo.setBlockSize(27)
+    stereo.setNumDisparities(32)
+    stereo.setBlockSize(31)
     # stereo.setMinDisparity(0)
     stereo.setPreFilterType(1)
     stereo.setPreFilterSize(5)
@@ -66,7 +66,7 @@ def depth_callback(left_msg, right_msg):
     #stereo.setDisp12MaxDiff(-1)
 
 
-    disparity = stereo.compute(left_img, right_img)
+    disparity = np.divide(stereo.compute(left_img, right_img), 16)
     #print("Disparty is", disparity)
 
     depth = ((focal_length * baseline) / disparity).astype(np.uint8)

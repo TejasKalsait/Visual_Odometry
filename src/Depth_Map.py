@@ -63,19 +63,32 @@ def depth_callback(left_msg, right_msg):
     stereo.setTextureThreshold(10)
     stereo.setUniquenessRatio(15)
 
-    stereo.setDisp12MaxDiff(-1)
+    #stereo.setDisp12MaxDiff(-1)
 
 
     disparity = stereo.compute(left_img, right_img)
     #print("Disparty is", disparity)
 
-    depth = (focal_length * baseline) / disparity
+    depth = ((focal_length * baseline) / disparity).astype(np.uint8)
 
-    plt.imshow(depth, cmap = 'gray')
-    print("Displaying he depth image now")
-    plt.show()
+    #print("Type is", type(depth))
 
-    depth_pub.publish(bridge.cv2_to_imgmsg(depth, encoding = "passthrough"))
+    #depth = (depth - depth.min()) / (depth.max() - depth.min())
+
+    #depth = (depth - depth[np.unravel_index(np.argmin(depth, axis = None), depth.shape)]) / (depth[np.unravel_index(np.argmax(depth, axis = None), depth.shape)] - depth[np.unravel_index(np.argmin(depth, axis = None), depth.shape)])
+
+    #depth = np.uint8(depth)
+
+    #print("Max is", depth.max(), "Min is", depth.min())
+
+    # plt.imshow(depth, cmap = 'gray')
+    # print("Displaying he depth image now")
+    # plt.show()
+
+    depth_pub.publish(bridge.cv2_to_imgmsg(depth, encoding = "mono8"))
+    
+    #depth = depth.astype(np.uint8)
+    # depth_pub.publish(depth)
 
 
 def focal_callback(focal_msg):
@@ -101,7 +114,8 @@ if __name__ == "__main__":
 
     # focal = rospy.Subscriber("/car_1/camera/intrinsic", String, focal_callback, queue_size = 2)
 
-    # rospy.sleep(1.0)
+
+    # rospy.sleep(3.0)
     
     left_sub = message_filters.Subscriber("/car_1/camera/left/image_raw/compressed", CompressedImage)
     right_sub = message_filters.Subscriber("/car_1/camera/right/image_raw/compressed", CompressedImage)

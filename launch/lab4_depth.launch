@@ -9,6 +9,6 @@
 
 
     <!-- start the calibraDepth node -->
-    <node pkg="lab4" type="Depth_Map.py" name="Depth_Map_Node" output="screen"/>
+    <node pkg="lab4" type="Depth_Map.py" name="Depth_Map_Node"/>
     
 </launch>

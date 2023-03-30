@@ -5,7 +5,7 @@
     <param name="calib_image_num" value="$(arg calib_image_num)" type="double"/> 
 
     <!-- start the calibration node -->
-    <node pkg="lab4" type="lab4_calibration.py" name="calibration_node"/>
+    <node pkg="lab4" type="lab4_calibration.py" name="calibration_node" output="screen"/>
 
     
 </launch>

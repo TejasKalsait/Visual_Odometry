@@ -5,14 +5,25 @@ import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
 from std_msgs.msg import String
+import rospkg
+from os import path
+
+
+
+os_root = rospkg.get_ros_root()
+r = rospkg.RosPack()
+file_path = r.get_path("lab4")
+#print("File_Path is", file_path)
+tracker = path.join(file_path, "calib")
+#print("Tracker is", tracker)
 
 rospy.init_node("calibration_node")
 
 intrinsic_pub = rospy.Publisher("/car_1/camera/intrinsic", String, queue_size = 2)
 
 
+num_of_images = 10
 # num_of_images = rospy.get_param("calib_image_num")
-num_of_images = 20
 
 # Distance between neighbouring blobs
 dist = 100
@@ -59,11 +70,11 @@ def calibration():
         #print("Random number is", rand_num)
 
         if rand_num < 10 and rand_num >= 0:
-            img_read = "/home/cse4568/catkin_ws/src/lab4/calib/frame00000" + str(rand_num) + ".png"
+            img_read = tracker + "/frame00000" + str(rand_num) + ".png"
         elif rand_num < 100 and rand_num > 9:
-            img_read = "/home/cse4568/catkin_ws/src/lab4/calib/frame0000" + str(rand_num) + ".png"
+            img_read = tracker + "/frame0000" + str(rand_num) + ".png"
         else:
-            img_read = "/home/cse4568/catkin_ws/src/lab4/calib/frame000" + str(rand_num) + ".png"
+            img_read = tracker + "/frame000" + str(rand_num) + ".png"
 
         #print(img_read)
 
